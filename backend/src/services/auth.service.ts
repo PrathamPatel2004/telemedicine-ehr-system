@@ -39,3 +39,24 @@ export const createUser = async (fname: string, lname: string, email: string, pa
 
     return { user, rawToken };
 }
+
+export const verifyToken = async (token: string) => {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const userToken = await UserTokenModel.findOne({ token: hashedToken, tokenType: "Verification" });
+    if (!userToken) throw new Error("Invalid or expired token");
+
+    if (userToken.expiresAt < new Date()) {
+        await UserTokenModel.deleteOne({ _id: userToken._id }); 
+        await UserModel.findByIdAndDelete(userToken.userId);
+        throw new Error("Token expired, please sign up again");
+    } // Optionally, delete the token and user if token is expired to prevent clutter and security issues
+
+    const user = await UserModel.findById(userToken.userId);
+    if (!user) throw new Error("User not found");
+
+    await user.updateOne({ isActive: true });
+    await UserTokenModel.deleteOne({ _id: userToken._id }); // delete token after successful verification
+
+    return user;
+}
