@@ -13,7 +13,7 @@ export const findUserById = async (id: string) => {
     return user;
 }
 
-export const createUser = async (fname: string, lname: string, email: string, password: string, role: "admin" | "patient" | "doctor") => {
+export const createUser = async (fname: string, lname: string, email: string, password: string, role: "admin" | "patient" | "doctor", phone: string) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -22,7 +22,8 @@ export const createUser = async (fname: string, lname: string, email: string, pa
         lname,
         email,
         hashPassword: hashedPassword,
-        role
+        role,
+        phone
     });
 
     if (!user) throw new Error("User creation failed");

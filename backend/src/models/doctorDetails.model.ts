@@ -4,22 +4,30 @@ import { Schema, type Document } from "mongoose";
 export interface IDoctorDetails extends Document {
     userId: mongoose.Types.ObjectId;
     specialization: string;
-    availability: { 
+    registrationNumber: string;
+    qualifications: string[];
+    experience: number;
+    consultationFee: number;
+    bio: string;
+    availability: {
         day: string;
-        slots: [{
+        slots: {
             startTime: string;
             endTime: string;
-        }]
-    };
-    experience: number;
-    consultationFee: Number,
-    ratings: number;
-    education: string;
+        }
+    }
+    rating: number;
+    totalReviews: number;    
 }
 
 const doctorDetailsSchema = new Schema<IDoctorDetails>({
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    specialization: { type: String, },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
+    specialization:  { type: String, required: true },
+    registrationNumber: { type: String, required: true, unique: true },
+    qualifications:  { type: [String], default: [] },
+    experience: { type: Number, required: true },
+    consultationFee: { type: Number, default: 0 },
+    bio: { type: String },
     availability: {
         day: { type: String, },
         slots: [{
@@ -27,10 +35,8 @@ const doctorDetailsSchema = new Schema<IDoctorDetails>({
             endTime: { type: String }
         }]
     },
-    experience: { type: Number },
-    consultationFee: { type: Number },
-    ratings: { type: Number, default: 0 },
-    education: { type: String }
+    rating: { type: Number, default: 0, min: 0, max: 5 },
+    totalReviews: { type: Number, default: 0 },
 }, { timestamps: true});
 
 const DoctorDetailsModel = mongoose.model<IDoctorDetails>('DoctorDetails', doctorDetailsSchema);
