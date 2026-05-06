@@ -6,7 +6,7 @@ import UserModel from "../models/user.model";
 import UserTokenModel from "../models/userToken.model";
 import DoctorDetailsModel from "../models/doctorDetails.model";
 import { createError } from "../middleware/error.middleware";
-import { createUser, findUserByEmail, verifyToken } from "../services/auth.service";
+import { createUser, findUserByEmail, findUserById, verifyToken } from "../services/auth.service";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.utils";
 
 interface JwtPayload {
@@ -173,4 +173,30 @@ export const logoutController = async (req: Request, res: Response, nxt: NextFun
     })
 
     return res.json({ success: true, message: "Logged out successfully" });
+}
+
+export const getCurrentUserController = async (req: Request, res: Response, nxt: NextFunction) => {
+    try {
+        const id = req.user?.id as string;
+        const user = await findUserById(id);
+        if (!user) return nxt(createError("User not found", 404));
+
+        if (user.isActive === false) return nxt(createError("User is inactive", 403));
+
+        return res.status(200).json({ success: true, message: "User data fetched successfully", user });
+    } catch (error) {
+        return nxt(createError("User not found", 404));
+    }
+}
+
+export const getDoctorDetailsController = async (req: Request, res: Response, nxt: NextFunction) => {
+    try {
+        const id = req.user?.id as string;
+        const doctorDetails = await DoctorDetailsModel.findOne({ userId: id });
+        if (!doctorDetails) return nxt(createError("Doctor details not found", 404));
+
+        return res.status(200).json({ success: true, message: "Doctor details fetched successfully", doctorDetails });
+    } catch (error) {
+        return nxt(createError("Error fetching doctor details", 500));
+    }
 }
