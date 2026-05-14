@@ -8,6 +8,7 @@ import DashboardLayout from './pages/Layout';
 import VerifyEmailPage from './pages/VerifyEmail';
 import PatientDashboard from './pages/PatientDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
+import BookAppointmentPage from './pages/BookAppointment';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
@@ -59,8 +60,8 @@ export default function App() {
                     </RequireRole></RequireAuth>
                 }>
                     <Route path="dashboard" element={<PatientDashboard />} />
+                    <Route path="book" element={<BookAppointmentPage />} />
             {/* 
-            <Route path="book"          element={<BookAppointmentPage />} />
             <Route path="appointments"  element={<MyAppointmentsPage />} />
             <Route path="ehr"           element={<MyEHRPage />} />
             <Route path="prescriptions" element={<MyPrescriptionsPage />} /> */}
