@@ -198,4 +198,14 @@ export const getAppointments = async (page = 1, limit = 5) => {
     return response.data;
 };
 
+export const updateAppointmentStatus = async (id: string, { status }: { status: string }) => {
+    const response = await api.put(`${id}/update-appointment`, { status });
+    return response.data;
+};
+
+export const getRoomToken = async (id: string) => {
+    const response = await api.get(`${id}/appointment-room-token`);
+    return response.data;
+};
+
 export default api;

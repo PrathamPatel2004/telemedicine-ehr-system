@@ -7,6 +7,7 @@ import SignupPage from './pages/SignupPage';
 import DashboardLayout from './pages/Layout';
 import VerifyEmailPage from './pages/VerifyEmail';
 import PatientDashboard from './pages/PatientDashboard';
+import DoctorDashboard from './pages/DoctorDashboard';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
@@ -46,7 +47,7 @@ export default function App() {
     return (
         <AuthProvider>
             <Routes>
-                <Route path="/login"    element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/verify-email" element={<VerifyEmailPage />} />
 
@@ -57,7 +58,7 @@ export default function App() {
                         <DashboardLayout />
                     </RequireRole></RequireAuth>
                 }>
-                    <Route path="dashboard"     element={<PatientDashboard />} />
+                    <Route path="dashboard" element={<PatientDashboard />} />
             {/* 
             <Route path="book"          element={<BookAppointmentPage />} />
             <Route path="appointments"  element={<MyAppointmentsPage />} />
@@ -70,7 +71,8 @@ export default function App() {
                         <DashboardLayout />
                     </RequireRole></RequireAuth>
                 }>
-            {/* <Route path="dashboard"          element={<DoctorDashboard />} />
+                    <Route path="dashboard" element={<DoctorDashboard />} />
+            {/*
             <Route path="appointments"       element={<DoctorAppointmentsPage />} />
             <Route path="patients"           element={<PatientRecordsPage />} />
             <Route path="ehr/create"         element={<CreateEHRPage />} />
